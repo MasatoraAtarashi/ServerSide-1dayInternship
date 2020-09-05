@@ -12,6 +12,7 @@ class CardsController < ApplicationController
     image = obj.get
     send_data image.body.read
   end
+  # credential.ymlとかに定義しておくのが良い
 
   def create
     ActiveRecord::Base.transaction do
@@ -20,6 +21,10 @@ class CardsController < ApplicationController
       card.save!
       SampleCardImageUploader.upload(card)
     end
+
+    # 余分なpersonが作られてしまっている
+    # personもそもそもビルドにするとか
+    # personはつくらず、カードだけして、帰ってきたら、パーソンをそこで　条件であとで作る
 
     head :created
   end
