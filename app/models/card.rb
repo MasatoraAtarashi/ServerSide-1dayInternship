@@ -15,4 +15,8 @@ class Card < ApplicationRecord
     end
     return card.person_id
   end
+
+  def self.search_by(name:, organization:)
+    self.where('name LIKE ? OR organization LIKE ?', "%#{name}%", "%#{organization}%")
+  end
 end
