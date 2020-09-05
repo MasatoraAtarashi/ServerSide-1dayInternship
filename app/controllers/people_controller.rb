@@ -1,5 +1,9 @@
 class PeopleController < ApplicationController
   def index
-    @people = [Person.first] # TODO
+    @people = Person.search(params[:query])
+  end
+
+  def merge
+
   end
 end
