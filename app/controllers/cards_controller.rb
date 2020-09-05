@@ -15,7 +15,9 @@ class CardsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      card = Person.create.cards.create!(card_params) # TODO:
+      card = Person.create.cards.build(card_params)
+      card.merge
+      card.save!
       SampleCardImageUploader.upload(card)
     end
 
