@@ -14,6 +14,7 @@ class CardsController < ApplicationController
   end
 
   def create
+    # mergeされた時はpersonを保存しないようにしようとしたが断念
     ActiveRecord::Base.transaction do
       card = Person.create.cards.build(card_params)
       card.merge
