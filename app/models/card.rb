@@ -8,9 +8,9 @@ class Card < ApplicationRecord
 
   def get_correct_person_id(card)
     person_id = card.person_id
-    candidate_card = Card.find_by(email: card.email)
-    if candidate_card
-      person_id = candidate_card.person_id if is_mergable(card, candidate_card)
+    candidate_cards = search_near_email(card.email)
+    candidate_cards.each do |candidate_card|
+      person_id = candidate_card.person_id if mergable?(card, candidate_card)
     end
     return person_id
   end
@@ -21,11 +21,35 @@ class Card < ApplicationRecord
 
   private
 
-  def is_mergable(card1, card2)
-    if card1.name.gsub(/\s/, "") == card2.name.gsub(/\s/, "") || calculation(card1.title, card2.title) >= 80
+  def search_near_email(email)
+    cards = []
+    Card.all.each do |card|
+      if flatten(card.email) == flatten(email)
+        cards << card
+      end
+    end
+    cards
+  end
+
+  def flatten(word)
+    word.gsub(/1|O|_/, '1' => 'i', 'O' => '0', '_' => '')
+  end
+
+  def mergable?(card1, card2)
+    if match?(name1: card1.name, name2: card2.name) || calculation(card1.title, card2.title) >= 80
       true
     else
       false
     end
+  end
+
+  def match?(name1:, name2:)
+    is_match = false
+    if name1.gsub(/\s/, '') == name2.gsub(/\s/, '')
+      is_match = true
+    elsif name1.gsub(/\W+\s/, '') == name2.gsub(/\W+\s/, '')
+      is_match = true
+    end
+    is_match
   end
 end
