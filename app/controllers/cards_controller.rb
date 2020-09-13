@@ -3,8 +3,8 @@ class CardsController < ApplicationController
     s3 = Aws::S3::Resource.new(
       endpoint: 'http://serverside-1dayinternship_minio_1:9000',
       region: 'us-east-1',
-      access_key_id: 'ak_eight',
-      secret_access_key: 'sk_eight',
+      access_key_id: Rails.application.credentials.aws[:access_key_id],
+      secret_access_key: Rails.application.credentials.aws[:secret_access_key],
       force_path_style: true,
     )
     bucket = s3.bucket('cards').exists? ? s3.bucket('cards') : s3.create_bucket(bucket: 'cards')
