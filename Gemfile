@@ -22,6 +22,8 @@ group :development, :test do
   gem 'pry-rails'
   gem 'rspec', '~> 3.9.0'
   gem 'spring-commands-rspec'
+  gem "rspec-rails"
+  gem "factory_bot_rails"
 end
 
 group :development do
