@@ -47,21 +47,31 @@ RSpec.describe Card, type: :model do
   end
 
   describe "#search_near_email" do
+    let!(:card1) do
+      person.cards.create(email: email)
+    end
+    let(:email) { 'i@example.com' }
+    subject { card1.send(:search_near_email, query_email) }
     context "i in email is 1" do
+      let(:query_email) { '1@example.com' }
       it 'returns valid cards' do
-        expect(1).to eq 1
+        expect(subject).to eq([card1])
       end
     end
 
     context "0 in email is O" do
+      let(:email) { '0@example.com' }
+      let(:query_email) { 'O@example.com' }
       it 'returns valid cards' do
-        expect(1).to eq 1
+        expect(subject).to eq([card1])
       end
     end
 
     context "_ in email is ''" do
+      let(:email) { 'a_a@example.com' }
+      let(:query_email) { 'aa@example.com' }
       it 'returns valid cards' do
-        expect(1).to eq 1
+        expect(subject).to eq([card1])
       end
     end
   end
