@@ -24,6 +24,7 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem "rspec-rails"
   gem "factory_bot_rails"
+  gem 'capybara'
 end
 
 group :development do
@@ -34,7 +35,6 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '>= 2.15'
   gem 'chromedriver-helper'
   gem 'selenium-webdriver'
 end
