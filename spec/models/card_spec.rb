@@ -2,32 +2,46 @@ require "rails_helper"
 
 RSpec.describe Card, type: :model do
   let(:person) { create(:person) }
-  let!(:card1) do
-    person.cards.create(name: '山田 太郎', organization: '三井物産')
-  end
-  let!(:card2) do
-    person.cards.create(name: '佐藤 花子', organization: 'SanSan')
-  end
-  let!(:card3) do
-    person.cards.create(name: '鈴木 一郎', organization: '日本')
-  end
+  let(:person2) { create(:person) }
+  let(:card) { person.cards.create }
 
   describe "#merge" do
+    let!(:card1) do
+      person.cards.create(email: email, name: name, title: title)
+    end
+    let!(:card2) do
+      person2.cards.create(email: email2, name: name2, title: title2)
+    end
+    let(:email) { 'yamada@example.com' }
+    let(:email2) { 'yamada@example.com' }
+    let(:name) { '山田 太郎' }
+    let(:name2) { '佐藤 花子' }
+    let(:title) { 'フロントエンドエンジニア' }
+    let(:title2) { 'サーバーサイドエンジニア' }
+    subject { card1.merge }
     context "email perfectly match and occupational relevance score is over 80" do
       it 'is merged' do
-        expect(1).to eq 2
+        subject
+        expect(card1.person_id).to eq card2.person_id
       end
     end
 
     context "email perfectly match and occupational relevance score is over 80" do
+      let(:name) { '山田 太郎' }
+      let(:name2) { '山田 太郎' }
+      let(:title2) { '人事' }
       it 'is merged' do
-        expect(1).to eq 1
+        subject
+        expect(card1.person_id).to eq card2.person_id
       end
     end
 
     context "not exist same user" do
+      let(:email) { 'yamada@example.com' }
+      let(:email2) { 'another@example.com' }
       it 'is not merged' do
-        expect(1).to eq 1
+        subject
+        expect(card1.person_id).to_not eq card2.person_id
       end
     end
   end
@@ -53,7 +67,7 @@ RSpec.describe Card, type: :model do
   end
 
   describe "#match?" do
-    subject { card1.send(:match?, name1: name1, name2: name2) }
+    subject { card.send(:match?, name1: name1, name2: name2) }
     context "last name is changed" do
       let(:name1) { '山田 太郎' }
       let(:name2) { '田中 太郎' }
@@ -72,10 +86,21 @@ RSpec.describe Card, type: :model do
   end
 
   describe "#self.search_by" do
+    let!(:card1) do
+      person.cards.create(name: '山田 太郎', organization: '三井物産')
+    end
+    let!(:card2) do
+      person.cards.create(name: '佐藤 花子', organization: 'SanSan')
+    end
+    let!(:card3) do
+      person.cards.create(name: '鈴木 一郎', organization: '日本')
+    end
+
     subject { Card.search_by(name: name, organization: organization)}
+
     context "search by name" do
-      let(:name) { '山田太郎' }
-      let(:organization) { '山田太郎' }
+      let(:name) { '山田 太郎' }
+      let(:organization) { '山田 太郎' }
       it 'returns valid cards' do
         expect(subject).to eq([card1])
       end
