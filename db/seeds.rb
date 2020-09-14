@@ -10,7 +10,7 @@ begin
   ActiveRecord::Base.connection.execute('ALTER TABLE cards AUTO_INCREMENT = 1')
   ActiveRecord::Base.connection.execute('ALTER TABLE people AUTO_INCREMENT = 1')
   ActiveRecord::Base.connection.execute('COMMIT')
-rescue => e
+rescue StandardError => e
   ActiveRecord::Base.connection.execute('ROLLBACK')
   raise e
 end
@@ -24,7 +24,7 @@ ActiveRecord::Base.transaction do
       email: row[2],
       organization: row[3],
       department: row[4],
-      title: row[5],
+      title: row[5]
     )
     Person.find_or_create_by(id: row[0]).cards << card
     SampleCardImageUploader.upload(card)

@@ -3,9 +3,9 @@ class CardsController < ApplicationController
     s3 = Aws::S3::Resource.new(
       endpoint: 'http://serverside-1dayinternship_minio_1:9000',
       region: 'us-east-1',
-      access_key_id: 'ak_eight',
-      secret_access_key: 'sk_eight',
-      force_path_style: true,
+      access_key_id: Rails.application.credentials.aws[:access_key_id],
+      secret_access_key: Rails.application.credentials.aws[:secret_access_key],
+      force_path_style: true
     )
     bucket = s3.bucket('cards').exists? ? s3.bucket('cards') : s3.create_bucket(bucket: 'cards')
     obj = bucket.object(params[:id].to_s)
@@ -14,6 +14,7 @@ class CardsController < ApplicationController
   end
 
   def create
+    # mergeされた時はpersonを保存しないようにしようとしたが断念
     ActiveRecord::Base.transaction do
       card = Person.create.cards.build(card_params)
       card.merge
