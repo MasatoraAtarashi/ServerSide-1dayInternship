@@ -3,13 +3,13 @@ require "rails_helper"
 RSpec.describe Card, type: :model do
   let(:person) { create(:person) }
   let!(:card1) do
-    person.cards.create(name: '山田太郎', organization: '三井物産')
+    person.cards.create(name: '山田 太郎', organization: '三井物産')
   end
   let!(:card2) do
-    person.cards.create(name: '佐藤花子', organization: 'SanSan')
+    person.cards.create(name: '佐藤 花子', organization: 'SanSan')
   end
   let!(:card3) do
-    person.cards.create(name: '鈴木一郎', organization: '日本')
+    person.cards.create(name: '鈴木 一郎', organization: '日本')
   end
 
   describe "#merge" do
@@ -53,15 +53,20 @@ RSpec.describe Card, type: :model do
   end
 
   describe "#match?" do
+    subject { card1.send(:match?, name1: name1, name2: name2) }
     context "last name is changed" do
+      let(:name1) { '山田 太郎' }
+      let(:name2) { '田中 太郎' }
       it 'returns true' do
-        expect(1).to eq 1
+        expect(subject).to eq(true)
       end
     end
 
     context "There is not any space between the first and last name" do
+      let(:name1) { '山田太郎' }
+      let(:name2) { '山田 太郎' }
       it 'returns true' do
-        expect(1).to eq 1
+        expect(subject).to eq(true)
       end
     end
   end
