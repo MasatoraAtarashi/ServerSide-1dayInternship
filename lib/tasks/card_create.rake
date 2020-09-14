@@ -21,10 +21,10 @@ def each_curl_request(csv_file)
       email: row[1],
       organization: row[2],
       department: row[3],
-      title: row[4],
+      title: row[4]
     }
 
-    uri = URI.parse("http://localhost:3000/cards")
+    uri = URI.parse('http://localhost:3000/cards')
     response = Net::HTTP.post_form(uri, params)
 
     unless response.code == '201'

@@ -1,6 +1,6 @@
 class SampleCardImageUploader
   def self.upload(card)
-    self.new(card).upload
+    new(card).upload
   end
 
   def initialize(card)
@@ -25,7 +25,7 @@ class SampleCardImageUploader
       region: 'us-east-1',
       access_key_id: 'ak_eight',
       secret_access_key: 'sk_eight',
-      force_path_style: true,
+      force_path_style: true
     )
   end
 

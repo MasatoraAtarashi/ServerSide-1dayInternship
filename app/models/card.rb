@@ -12,11 +12,11 @@ class Card < ApplicationRecord
     candidate_cards.each do |candidate_card|
       person_id = candidate_card.person_id if mergable?(card, candidate_card)
     end
-    return person_id
+    person_id
   end
 
   def self.search_by(name:, organization:)
-    self.where('name LIKE ? OR organization LIKE ?', "%#{name}%", "%#{organization}%")
+    where('name LIKE ? OR organization LIKE ?', "%#{name}%", "%#{organization}%")
   end
 
   private
@@ -24,9 +24,7 @@ class Card < ApplicationRecord
   def search_near_email(email)
     cards = []
     Card.all.each do |card|
-      if flatten(card.email) == flatten(email)
-        cards << card
-      end
+      cards << card if flatten(card.email) == flatten(email)
     end
     cards
   end

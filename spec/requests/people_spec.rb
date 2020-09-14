@@ -1,13 +1,11 @@
-require "rails_helper"
+require 'rails_helper'
 include Capybara::RSpecMatchers
 
 RSpec.describe PeopleController, type: :request do
   let(:person) { create(:person) }
   let!(:card) { person.cards.create }
 
-
-  describe "GET /" do
-
+  describe 'GET /' do
     it 'show valid cards' do
       get people_path
       expect(response.status).to eq 200
